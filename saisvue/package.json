@@ -23,7 +23,7 @@
     "bootstrap": "^3.3.6",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "jquery": "^2.2.4",
+    "jquery": "^3.4.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
