@@ -1,5 +1,7 @@
 # SaisVue
 
+电商管理系统vue前端部分
+
 ## 来源
 
 [20-Vue实战项目：电商管理系统（Element-UI）](https://www.bilibili.com/video/av74592164)
