@@ -17,7 +17,7 @@
         <el-menu background-color="#333744" text-color="#fff"
         active-text-color="#409EFF" :unique-opened="true"
         :collapse="isCollapse" :collapse-transition="false"
-        :router="true">
+        :router="true" :default-active="this.$router.history.current.path">
           <!-- 一级菜单 -->
           <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
             <!-- 一级菜单的模板区域 -->
@@ -29,7 +29,8 @@
             </template>
 
             <!-- 二级菜单 -->
-            <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
+            <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children"
+            :key="subItem.id">
               <template slot="title">
                 <!-- 图标 -->
                 <i class="el-icon-menu"></i>
@@ -77,7 +78,7 @@ export default {
     // 获取所有的菜单
     async getMenuList () {
       const { data: res } = await this.$http.get('menus')
-      console.log(res)
+      // console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error(res.meta.msg)
       }
