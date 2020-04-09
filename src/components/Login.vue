@@ -1,28 +1,44 @@
 <template>
-    <div class="login_container">
-        <div class="login_box">
-            <div class="avatar_box">
-                <!-- 头像区域 -->
-                <img src="../assets/logo.png" alt="">
-            </div>
-            <!-- 登录表单区域 -->
-            <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" class="login_form" label-width="0px">
-                <!-- 用户名 -->
-                <el-form-item prop="username">
-                    <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
-                </el-form-item>
-                 <!-- 密码 -->
-                <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" type="password"></el-input>
-                </el-form-item>
-                <!-- 按钮区域 -->
-                <el-form-item class="btns">
-                    <el-button type="primary" @click="login">登录</el-button>
-                    <el-button type="info" @click="resetLoginForm">重置</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+  <div class="login_container">
+    <div class="login_box">
+      <div class="avatar_box">
+        <!-- 头像区域 -->
+        <img src="../assets/logo.png" alt />
+      </div>
+      <!-- 登录表单区域 -->
+      <el-form
+        ref="loginFormRef"
+        :model="loginForm"
+        :rules="loginFormRules"
+        class="login_form"
+        label-width="0px"
+      >
+        <!-- 用户名 -->
+        <el-form-item prop="username">
+          <el-input
+            v-model="loginForm.username"
+            prefix-icon="el-icon-user-solid"
+            @keyup.enter.native="changeFocus"
+          ></el-input>
+        </el-form-item>
+        <!-- 密码 -->
+        <el-form-item prop="password">
+          <el-input
+            ref="passwordRef"
+            v-model="loginForm.password"
+            prefix-icon="el-icon-lock"
+            type="password"
+            @keyup.enter.native="login"
+          ></el-input>
+        </el-form-item>
+        <!-- 按钮区域 -->
+        <el-form-item class="btns">
+          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="info" @click="resetLoginForm">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
+  </div>
 </template>
 
 <script>
@@ -67,57 +83,68 @@ export default {
     // 点击重置按钮，重置登录表单
     resetLoginForm () {
       this.$refs.loginFormRef.resetFields()
+    },
+    // 将焦点移到
+    changeFocus () {
+      // 在vue生命周期的created()钩子函数进行的DOM操作要放在Vue.nextTick()的回调函数中，
+      // 因为created()钩子函数执行的时候DOM并未进行任何渲染，
+      // 而此时进行DOM操作是徒劳的，
+      // 所以此处一定要将DOM操作的JS代码放进Vue.nextTick()的回调函数中。
+      this.$nextTick(x => {
+        // 正确写法
+        this.$refs.passwordRef.focus()
+      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.login_container{
-    height: 100%;
-    background-color: #2b4b6b;
+.login_container {
+  height: 100%;
+  background-color: #2b4b6b;
 }
 
-.login_box{
-    width: 450px;
-    height: 300px;
-    background-color: #fff;
-    border-radius: 3px;
+.login_box {
+  width: 450px;
+  height: 300px;
+  background-color: #fff;
+  border-radius: 3px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  .avatar_box {
+    height: 130px;
+    width: 130px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 0 10px #ddd;
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-
-    .avatar_box{
-        height: 130px;
-        width: 130px;
-        border: 1px solid #eee;
-        border-radius: 50%;
-        padding: 10px;
-        box-shadow: 0 0 10px #ddd;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        background-color: #fff;
-        img{
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background-color: #eee;
-        }
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #eee;
     }
+  }
 }
 
-.login_form{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 0 20px;
-    box-sizing: border-box;
+.login_form {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-.btns{
-    display: flex;
-    justify-content: flex-end;
+.btns {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
