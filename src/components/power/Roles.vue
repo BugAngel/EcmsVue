@@ -211,7 +211,6 @@ export default {
         // 可以发起添加角色的网络请求
         const { data: res } = await this.$http.post('roles', this.addForm)
         if (res.meta.status !== 201) {
-          console.log(res.meta)
           return this.$message.error('添加角色失败!')
         }
         this.$message.success('添加角色成功！')

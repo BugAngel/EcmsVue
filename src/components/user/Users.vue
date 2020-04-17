@@ -285,19 +285,16 @@ export default {
     },
     // 监听 pagesize 改变的事件
     handleSizeChange (newSize) {
-      //   console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getUserList()
     },
     // 监听页码值改变的事件
     handleCurrentChange (newPage) {
-      //   console.log(newPage)
       this.queryInfo.pagenum = newPage
       this.getUserList()
     },
     // 监听 switch 开关状态的改变
     async userStateChanged (userInfo) {
-      // console.log(userInfo)
       const { data: res } = await this.$http.put(
         `users/${userInfo.id}/state/${userInfo.mg_state}`
       )
@@ -407,7 +404,6 @@ export default {
       if (!this.selectedRoleId) {
         return this.$message.error('请选择要分配的角色!')
       }
-      console.log(this.selectedRoleId)
       const {
         data: res
       } = await this.$http.put(`users/${this.userInfo.id}/role`, {
@@ -418,7 +414,6 @@ export default {
       }
       this.$message.success('更新角色成功!')
       this.getUserList()
-      console.log(this.userList)
       this.setRoleDialogVisible = false
     },
     // 监听分配角色对话框的关闭事件
