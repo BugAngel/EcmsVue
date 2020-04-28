@@ -147,7 +147,7 @@ export default {
       //静态属性数据
       onlyTableData: [],
       //上传文件的URL地址
-      uploadURL: "http://timemeetyou.com:8889/api/private/v1/upload/",
+      uploadURL: "http://server.sineava.top/api/private/v1/upload/",
       // 图片上传组件的headers请求头对象
       headerObj: {
         Authorization: window.sessionStorage.getItem("token")
