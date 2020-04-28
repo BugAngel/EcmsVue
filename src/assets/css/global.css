@@ -1,7 +1,9 @@
 /* 全局样式表 */
-html,body,#app{
+html,
+body,
+#app {
     height: 100%;
-    margin:0;
+    margin: 0;
     padding: 0;
     min-width: 1366px;
 }
@@ -12,7 +14,7 @@ html,body,#app{
 }
 
 .el-card {
-    box-shadow: 0 1px 1px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
 }
 
 .el-table {
@@ -23,6 +25,18 @@ html,body,#app{
     margin-top: 15px;
 }
 
-.el-cascader-menu{
+.el-cascader-menu {
     height: 300px;
+}
+
+.el-steps {
+    margin: 15px 0;
+}
+
+.el-step__icon {
+    font-size: 13px;
+}
+
+.ql-editor {
+    min-height: 300px;
 }
