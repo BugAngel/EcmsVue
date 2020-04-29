@@ -29,8 +29,18 @@
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" @click="removeById(scope.row.goods_id)">删除</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+              @click="showEditDialog(scope.row.goods_id)"
+            >编辑</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="removeById(scope.row.goods_id)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,6 +56,31 @@
         background
       ></el-pagination>
     </el-card>
+    <!-- 编辑对话框 -->
+    <el-dialog title="修改分类" :visible.sync="editDialogVisible" @close="editDialogClosed">
+      <!-- 内容主体区域 -->
+      <el-form :model="editForm" :rules="editFormRules" label-width="120px" ref="editFormRef">
+        <el-form-item label="商品 ID">
+          <el-input v-model="editForm.goods_id" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="商品名称" prop="goods_name">
+          <el-input v-model="editForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格(元)" prop="goods_price">
+          <el-input v-model="editForm.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量" prop="goods_weight">
+          <el-input v-model="editForm.goods_weight"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量" prop="goods_number">
+          <el-input v-model="editForm.goods_number"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editInfo">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -62,7 +97,26 @@ export default {
       //商品列表数据
       goodslist: [],
       //总商品个数
-      total: 0
+      total: 0,
+      // 控制修改商品对话框的显示
+      editDialogVisible: false,
+      // 修改商品的表单数据
+      editForm: {},
+      // 修改商品的验证规则
+      editFormRules: {
+        goods_name: [
+          { required: true, message: "请输入商品名字", trigger: "blur" }
+        ],
+        goods_price: [
+          { required: true, message: "请输入商品价格", trigger: "blur" }
+        ],
+        goods_weight: [
+          { required: true, message: "请输入商品重量", trigger: "blur" }
+        ],
+        goods_number: [
+          { required: true, message: "请输入商品数量", trigger: "blur" }
+        ]
+      }
     };
   },
   created() {
@@ -89,31 +143,64 @@ export default {
       this.queryInfo.pagenum = newPage;
       this.getGoodsList();
     },
-    async removeById(id){
-// 弹框询问用户是否删除数据
+    async removeById(id) {
+      // 弹框询问用户是否删除商品
       const confirmResult = await this.$confirm(
-        '此操作将永久删除该商品, 是否继续?',
-        '提示',
+        "此操作将永久删除该商品, 是否继续?",
+        "提示",
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         }
-      ).catch(err => err)
+      ).catch(err => err);
       // 如果用户确认删除，则返回值为字符串 confirm
       // 如果用户取消删除，则返回值为字符串 cancel
-      if (confirmResult !== 'confirm') {
-        return this.$message.info('已取消删除')
+      if (confirmResult !== "confirm") {
+        return this.$message.info("已取消删除");
       }
-      const { data: res } = await this.$http.delete(`goods/${id}`)
+      const { data: res } = await this.$http.delete(`goods/${id}`);
       if (res.meta.status !== 200) {
-        return this.$message.error('删除商品失败!')
+        return this.$message.error("删除商品失败!");
       }
-      this.$message.success('删除商品成功!')
-      this.getGoodsList()
+      this.$message.success("删除商品成功!");
+      this.getGoodsList();
     },
-    goAddPage(){
-      this.$router.push('/goods/add')
+    goAddPage() {
+      this.$router.push("/goods/add");
+    },
+    // 展示编辑商品的对话框
+    async showEditDialog(goods_id) {
+      const { data: res } = await this.$http.get("goods/" + goods_id);
+      if (res.meta.status !== 200) {
+        return this.$message.error("查询商品失败！");
+      }
+      this.editForm = res.data;
+      // console.log(this.editForm);
+      this.editDialogVisible = true;
+    },
+    // 监听编辑商品对话框的关闭事件
+    editDialogClosed() {
+      this.$refs.editFormRef.resetFields();
+    },
+    // 编辑商品信息并提交
+    editInfo() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return;
+        const { data: res } = await this.$http.put(
+          "goods/" + this.editForm.goods_id,this.editForm
+        );
+        // console.log(res)
+        // 接口BUG，按文档应该是201
+        if (res.meta.status !== 200) {
+          return this.$message.error("更新商品信息失败！");
+        }
+        this.$message.success("更新商品信息成功！");
+        // 关闭对话框
+        this.editDialogVisible = false;
+        // 刷新数据列表
+        this.getGoodsList();
+      });
     }
   },
   computed: {}

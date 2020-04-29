@@ -14,14 +14,27 @@ import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 
+//导入 NProgress 对应的js与css
+import NProgress from'nprogress'
+import 'nprogress/nprogress.css'
+
 import axios from 'axios'
 // 配置请求的根路径
 axios.defaults.baseURL = 'http://server.sineava.top/api/private/v1/'
+//在request拦截器中，展示进度条 NProgress.start()
 axios.interceptors.request.use(config => {
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   // 最后必须 return config
   return config
 })
+//在response拦截器中，隐藏进度条 NProgress.done()
+axios.interceptors.response.use(config => {
+  NProgress.done()
+  // 最后必须 return config
+  return config
+})
+
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
