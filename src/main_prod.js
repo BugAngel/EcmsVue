@@ -15,7 +15,7 @@ import NProgress from'nprogress'
 
 import axios from 'axios'
 // 配置请求的根路径
-axios.defaults.baseURL = 'http://server.sineava.top/api/private/v1/'
+axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
 //在request拦截器中，展示进度条 NProgress.start()
 axios.interceptors.request.use(config => {
   NProgress.start()
